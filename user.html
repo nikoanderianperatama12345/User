@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Web Togel</title>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial; max-width: 400px; margin: auto; text-align: center; }
+    input, select, button { padding: 8px; width: 100%; margin-top: 10px; }
+    h3 { margin-top: 20px; }
+    .menang { color: green; }
+    .kalah { color: red; }
+  </style>
+</head>
+<body>
+  <h2>Web Togel</h2>
+  <label>User:</label>
+  <select id="user">
+    <option>Budi</option>
+    <option>Rina</option>
+    <option>Andi</option>
+    <option>Sari</option>
+    <option>Joko</option>
+  </select><br>
+
+  <input type="text" id="angka" placeholder="Masukkan 4 digit">
+  <button onclick="cek()">Submit</button>
+
+  <div id="hasilArea"></div>
+
+  <script>
+    const hasilURL = "https://a87ac.netlify.app/hasil.json"; // GANTI sesuai URL hasil.json kamu
+
+    async function cek() {
+      const user = document.getElementById("user").value;
+      const angka = document.getElementById("angka").value.trim();
+
+      if (angka.length !== 4 || isNaN(angka)) {
+        alert("Masukkan angka 4 digit!");
+        return;
+      }
+
+      try {
+        const res = await fetch(hasilURL);
+        const data = await res.json();
+        const hasilUser = data.hasil[user];
+        const status = angka === hasilUser ? "MENANG!" : "KALAH!";
+        const kelas = angka === hasilUser ? "menang" : "kalah";
+
+        document.getElementById("hasilArea").innerHTML = `
+          <p>${user} menebak: <b>${angka}</b></p>
+          <p>Hasil togel: <b>${hasilUser}</b></p>
+          <h3 class="${kelas}">${status}</h3>
+        `;
+      } catch (e) {
+        document.getElementById("hasilArea").innerText = "Gagal ambil data.";
+      }
+    }
+  </script>
+</body>
+</html>
